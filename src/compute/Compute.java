@@ -31,6 +31,8 @@
 
 package compute;
 
+import compute.task.Task;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

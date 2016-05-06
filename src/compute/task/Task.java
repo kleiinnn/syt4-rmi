@@ -29,7 +29,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package compute;
+package compute.task;
+
+import compute.SolutionCallback;
 
 public interface Task<T> {
     SolutionCallback<T> getCallback();

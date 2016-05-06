@@ -36,7 +36,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import compute.Compute;
-import compute.Task;
+import compute.task.Task;
 
 public class ComputeEngine implements Compute {
 
