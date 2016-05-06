@@ -32,5 +32,7 @@
 package compute;
 
 public interface Task<T> {
+    SolutionCallback<T> getCallback();
+
     T execute();
 }

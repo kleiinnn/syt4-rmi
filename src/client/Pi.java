@@ -31,6 +31,7 @@
 
 package client;
 
+import compute.SolutionCallback;
 import compute.Task;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -49,13 +50,21 @@ public class Pi implements Task<BigDecimal>, Serializable {
 
     /** digits of precision after the decimal point */
     private final int digits;
+
+    private SolutionCallback<BigDecimal> callback;
     
     /**
      * Construct a task to calculate pi to the specified
      * precision.
      */
-    public Pi(int digits) {
+    public Pi(int digits, SolutionCallback<BigDecimal> callback) {
         this.digits = digits;
+        this.callback = callback;
+    }
+
+    @Override
+    public SolutionCallback<BigDecimal> getCallback() {
+        return callback;
     }
 
     /**

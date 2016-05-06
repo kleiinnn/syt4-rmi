@@ -31,6 +31,7 @@
 
 package engine;
 
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -43,8 +44,8 @@ public class ComputeEngine implements Compute {
         super();
     }
 
-    public <T> T executeTask(Task<T> t) {
-        return t.execute();
+    public <T> void executeTask(Task<T> t) {
+        new Thread(new TaskExecutor<>(t)).start();
     }
 
     public static void main(String[] args) {
@@ -62,6 +63,24 @@ public class ComputeEngine implements Compute {
         } catch (Exception e) {
             System.err.println("ComputeEngine exception:");
             e.printStackTrace();
+        }
+    }
+
+    private static class TaskExecutor<T> implements Runnable {
+        private Task<T> task;
+
+        private TaskExecutor(Task<T> task) {
+            this.task = task;
+        }
+
+        @Override
+        public void run() {
+            T solution = task.execute();
+            try {
+                task.getCallback().getSolution(solution);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

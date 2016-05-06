@@ -34,7 +34,10 @@ package client;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.math.BigDecimal;
+import java.rmi.server.UnicastRemoteObject;
+
 import compute.Compute;
+import compute.SolutionCallback;
 
 public class ComputePi {
     public static void main(String args[]) {
@@ -46,9 +49,12 @@ public class ComputePi {
             String name = "Compute";
             Registry registry = LocateRegistry.getRegistry(args[0]);
             Compute comp = (Compute) registry.lookup(name);
-            Pi task = new Pi(Integer.parseInt(args[1]));
-            BigDecimal pi = comp.executeTask(task);
-            System.out.println(pi);
+            SolutionCallback<BigDecimal> callback = (SolutionCallback<BigDecimal>) UnicastRemoteObject.exportObject((SolutionCallback<BigDecimal>) solution -> {
+                System.out.println(solution);
+            }, 0);
+            Pi task = new Pi(Integer.parseInt(args[1]), callback);
+            comp.executeTask(task);
+
         } catch (Exception e) {
             System.err.println("ComputePi exception:");
             e.printStackTrace();
