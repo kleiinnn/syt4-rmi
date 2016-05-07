@@ -195,3 +195,6 @@ TSWLatexianTemp*
 
 # KBibTeX
 *~[0-9]*
+
+# Compiles latex PDFs
+*.pdf
