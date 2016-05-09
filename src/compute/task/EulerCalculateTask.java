@@ -8,14 +8,14 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
- * from: http://www.java2s.com/Book/Java/Essential-Classes/Calculating_Eulers_number_e_with_BigDecimal.htm
+ * from: http://stackoverflow.com/a/1481788/3554016
  */
 public class EulerCalculateTask implements Task<BigDecimal>, Serializable {
-    private int digits;
+    private int precision;
     private SolutionCallback<BigDecimal> callback;
 
     public EulerCalculateTask(int digits, SolutionCallback<BigDecimal> callback) {
-        this.digits = digits;
+        this.precision = digits - 1;
         this.callback = callback;
     }
 
@@ -26,20 +26,18 @@ public class EulerCalculateTask implements Task<BigDecimal>, Serializable {
 
     @Override
     public BigDecimal execute() {
-        MathContext mc = new MathContext(100, RoundingMode.HALF_UP);
-        BigDecimal result = BigDecimal.ZERO;
-        for (int i = 0; i <= digits; i++) {
-            BigDecimal factorial = factorial(new BigDecimal(i));
-            BigDecimal res = BigDecimal.ONE.divide(factorial, mc);
-            result = result.add(res);
-        }
-        return result;
+        return calculateEuler(precision);
     }
 
-    private BigDecimal factorial(BigDecimal n) {
-        if (n.equals(BigDecimal.ZERO))
-            return BigDecimal.ONE;
-        else
-            return n.multiply(factorial(n.subtract(BigDecimal.ONE)));
+    public static BigDecimal calculateEuler(int precision) {
+        BigDecimal e = BigDecimal.ONE;
+        BigDecimal fact = BigDecimal.ONE;
+
+        for(int i=1;i<precision;i++) {
+            fact = fact.multiply(new BigDecimal(i));
+
+            e = e.add(BigDecimal.ONE.divide(fact, new MathContext(10000, RoundingMode.HALF_UP)));
+        }
+        return e;
     }
 }
