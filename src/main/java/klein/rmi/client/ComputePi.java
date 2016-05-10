@@ -29,58 +29,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package engine;
+package klein.rmi.client;
 
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import compute.Compute;
-import compute.task.Task;
-
-public class ComputeEngine implements Compute {
-
-    public ComputeEngine() {
-        super();
-    }
-
-    public <T> void executeTask(Task<T> t) {
-        new Thread(new TaskExecutor<>(t)).start();
-    }
-
-    public static void main(String[] args) {
+public class ComputePi {
+    public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            String name = "Compute";
-            Compute engine = new ComputeEngine();
-            Compute stub =
-                (Compute) UnicastRemoteObject.exportObject(engine, 0);
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.rebind(name, stub);
-            System.out.println("ComputeEngine bound");
+
+
+            /*SolutionCallback<BigDecimal> callback = new SolutionCallback<BigDecimal>() {
+                @Override
+                public void getSolution(BigDecimal solution) throws RemoteException {
+                    System.out.println(solution);
+                    UnicastRemoteObject.unexportObject(this, true);
+                }
+            };
+
+            EulerCalculateTask task = new EulerCalculateTask(Integer.parseInt(args[1]), (SolutionCallback<BigDecimal>) UnicastRemoteObject.exportObject(callback, 0));
+            comp.executeTask(task);
+            */
+
         } catch (Exception e) {
-            System.err.println("ComputeEngine exception:");
+            System.err.println("ComputePi exception:");
             e.printStackTrace();
         }
-    }
-
-    private static class TaskExecutor<T> implements Runnable {
-        private Task<T> task;
-
-        private TaskExecutor(Task<T> task) {
-            this.task = task;
-        }
-
-        @Override
-        public void run() {
-            T solution = task.execute();
-            try {
-                task.getCallback().getSolution(solution);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    }    
 }

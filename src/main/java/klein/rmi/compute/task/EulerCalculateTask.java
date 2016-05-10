@@ -1,6 +1,6 @@
-package compute.task;
+package klein.rmi.compute.task;
 
-import compute.SolutionCallback;
+import klein.rmi.compute.SolutionCallback;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,12 +10,12 @@ import java.math.RoundingMode;
 /**
  * from: http://stackoverflow.com/a/1481788/3554016
  */
-public class EulerCalculateTask implements Task<BigDecimal>, Serializable {
+public class EulerCalculateTask implements Task<BigDecimal> {
     private int precision;
     private SolutionCallback<BigDecimal> callback;
 
     public EulerCalculateTask(int digits, SolutionCallback<BigDecimal> callback) {
-        this.precision = digits - 1;
+        this.precision = digits;
         this.callback = callback;
     }
 

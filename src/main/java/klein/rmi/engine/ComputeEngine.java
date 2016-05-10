@@ -29,13 +29,62 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package compute;
+package klein.rmi.engine;
 
-import compute.task.Task;
-
-import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import klein.rmi.compute.Compute;
+import klein.rmi.compute.task.Task;
 
-public interface Compute extends Remote {
-    <T> void executeTask(Task<T> t) throws RemoteException;
+public class ComputeEngine implements Compute {
+
+    public ComputeEngine() {
+        super();
+    }
+
+    public <T> void executeTask(Task<T> t) {
+        new Thread(new TaskExecutor<>(t)).start();
+    }
+
+    public void runEngine() {
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+            String name = "Compute";
+            Compute stub =
+                    (Compute) UnicastRemoteObject.exportObject(this, 0);
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind(name, stub);
+            System.out.println("ComputeEngine bound");
+        } catch (Exception e) {
+            System.err.println("ComputeEngine exception:");
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        ComputeEngine engine = new ComputeEngine();
+        engine.runEngine();
+    }
+
+    private static class TaskExecutor<T> implements Runnable {
+        private Task<T> task;
+
+        private TaskExecutor(Task<T> task) {
+            this.task = task;
+        }
+
+        @Override
+        public void run() {
+            T solution = task.execute();
+            try {
+                task.getCallback().getSolution(solution);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

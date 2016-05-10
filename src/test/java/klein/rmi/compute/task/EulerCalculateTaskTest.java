@@ -1,6 +1,6 @@
-package test.compute.task;
+package klein.rmi.compute.task;
 
-import compute.task.EulerCalculateTask;
+import klein.rmi.compute.task.EulerCalculateTask;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

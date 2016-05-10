@@ -29,11 +29,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package compute.task;
+package klein.rmi.compute.task;
 
-import compute.SolutionCallback;
+import klein.rmi.compute.SolutionCallback;
 
-public interface Task<T> {
+import java.io.Serializable;
+
+public interface Task<T> extends Serializable {
     SolutionCallback<T> getCallback();
 
     T execute();

@@ -198,3 +198,6 @@ TSWLatexianTemp*
 
 # Compiles latex PDFs
 *.pdf
+
+# Maven
+target

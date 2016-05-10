@@ -49,14 +49,14 @@
         <antcall target="build"/>
     </target>
     <target depends="build" name="engine">
-        <java classname="engine.ComputeEngine" failonerror="true" fork="yes">
+        <java classname="klein.rmi.engine.ComputeEngine" failonerror="true" fork="yes">
             <classpath refid="rmiTutorial.classpath"/>
         </java>
     </target>
     <target depends="build" name="compute">
-        <java classname="client.ComputePi" failonerror="true" fork="yes">
+        <java classname="klein.rmi.client.ComputePi" failonerror="true" fork="yes">
 	    <arg value="localhost"/>
-	    <arg value="200"/>
+	    <arg value="20"/>
             <classpath refid="rmiTutorial.classpath"/>
         </java>
     </target>

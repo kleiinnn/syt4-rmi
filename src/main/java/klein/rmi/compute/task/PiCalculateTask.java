@@ -1,4 +1,4 @@
-package compute.task;/*
+package klein.rmi.compute.task;/*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +29,10 @@ package compute.task;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import compute.SolutionCallback;
-import java.io.Serializable;
+import klein.rmi.compute.SolutionCallback;
 import java.math.BigDecimal;
 
-public class PiCalculateTask implements Task<BigDecimal>, Serializable {
+public class PiCalculateTask implements Task<BigDecimal> {
 
     private static final long serialVersionUID = 227L;
 
