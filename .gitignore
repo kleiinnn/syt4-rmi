@@ -201,3 +201,7 @@ TSWLatexianTemp*
 
 # Maven
 target
+
+# Astah
+*.asta
+*.asta.lock
