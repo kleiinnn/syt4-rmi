@@ -155,7 +155,7 @@ Das folgende Sequenzdiagram bietet eine \"ubersichtliche Darstellung des Ablaufe
 Bei der Betrachtung des Klassendiagramms wird der Anschein erweckt, dass der Client bei dem Aufruf von \texttt{executeTask} des Remote Objekts das Callback als normales Objekt \"ubergibt.
 Wichtig ist dabei jedoch, dass es durch den Aufruf von \texttt{UnicastRemoteObject.exportObject()} in eine Remote Objektreferenz gepackt wird:
 
-\begin{lstlisting}[style=Java, caption=Beispielcode zur asynchronen Ausf\"uhrung einer Berechnung.]
+\begin{lstlisting}[style=Java, caption=Beispielcode zur asynchronen Ausf\"uhrung einer Berechnung]
 // create callback
 SolutionCallback callback = new SolutionCallback() {
     @Override
@@ -178,7 +178,8 @@ client.executeTask(task, (SolutionCallback) UnicastRemoteObject.exportObject(cal
 
 Wichtig ist dabei die letzte Zeile, welche das Callback Objekt wieder entfernt und damit der auf entfernte Methodenaufrufe wartet beendet werden kann.
 
-\subsection{Unittests}
+
+\subsection{Testung}
 \subsubsection{Build Automation}
 Da Ant standardm\"a\ss ig nicht f\"ur Dependency Management verwendet werden kann, jedoch f\"ur die sp\"ater beschriebenen Unit Tests einige Libraries zum Einsatz kommen, habe ich mich f\"ur einen Wechsel des Build Systems auf Maven entschieden.
 Die Konfiguration von Maven erfolgt ebenfalls mit XMl und ist Ant relativ \"ahnlich, allerdings muss die Projektstruktur etwas abge\"andert werden:
@@ -238,7 +239,7 @@ Einige nicht relevanten aber dennoch zwingende Attribute und Elemente wurden weg
 Der wichtigste Testcase startet eine \texttt{ComputeEngine}, \"offnet eine Verbindung und f\"uehrt eine Dummyberechnung aus.
 Als Callback Objekt kommt ein Spy zum Einsatz, welcher den korrekten Aufruf der Callbackfunktion mit dem erwarteten Ergebnis verifiziert.
 
-\begin{lstlisting}[style=Java, caption=Beispielcode zur asynchronen Ausf\"uhrung einer Berechnung.]
+\begin{lstlisting}[style=Java, caption=Testfall zur Durchf\"uhrung von asynchronen Berechnungen]
 public class ComputeEngineTest {
     @Test
     public void testExecuteTask() throws Exception {
@@ -274,6 +275,28 @@ public class ComputeEngineTest {
     }
 }
 \end{lstlisting}
+
+\subsection{Programmausf\"uhrung}
+Die Applikation besteht aus dem Server (Klasse \texttt{klein.rmi.engine.ComputeEngine}) und einem Kommandozeilenclient (Klasse \texttt{klein.rmi.client.ComputeClient}).
+Der Client erwartet dabei 3 Argumente:
+\begin{itemize}
+    \item Die anzustellende Berechnung (\texttt{pi} oder \texttt{euler})
+    \item Einen Genauigkeitsgrad (Kommastellen bei \texttt{pi} und Anzahl der Iterationen bei \texttt{euler}).
+    \item Hostname der Servers
+\end{itemize}
+
+Bevor die Applikation gestartet werden kann, wird mit Maven ein jar generiert:
+
+\texttt{mvn package}
+
+W\"ahrenddessen werden auch automatisch die Testcases ausgef\"uhrt.
+Danach kann wird das Programm durch folgende Befehlegestartet:
+\begin{itemize}
+    \item Server: \texttt{java -cp target/syt-rmi-1.0.jar klein.rmi.engine.ComputeEngine}
+    \item Client: \texttt{java -cp target/syt-rmi-1.0.jar klein.rmi.engine.ComputeEngine} [pi, euler] <precision> <server-host>
+\end{itemize}
+
+Der Code ist auf GitHub unter folgender Adresse abrufbar: \url{https://github.com/kleiinnn/syt4-rmi}\cite{repo}.
 
 \subsection{Arbeitszeit}
 \renewcommand{\arraystretch}{1.5}
