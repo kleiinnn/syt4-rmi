@@ -42,6 +42,7 @@ public class ComputeClient {
         if(args.length != 3) {
             System.err.println("Wrong paramters.");
             printUsage();
+            return;
         }
 
         SolutionCallback callback = new SolutionCallback() {
