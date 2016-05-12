@@ -1,6 +1,5 @@
 package klein.rmi.compute.task;
 
-import klein.rmi.compute.task.PiCalculateTask;
 import org.junit.Assert;
 
 import java.math.BigDecimal;

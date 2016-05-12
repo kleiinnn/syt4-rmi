@@ -31,6 +31,10 @@ package klein.rmi.compute.task;/*
 
 import java.math.BigDecimal;
 
+/**
+ * PiCalculateTask is a task for calculating pi
+ * from: http://stackoverflow.com/a/1481788/3554016
+ */
 public class PiCalculateTask implements Task<BigDecimal> {
 
     private static final long serialVersionUID = 227L;

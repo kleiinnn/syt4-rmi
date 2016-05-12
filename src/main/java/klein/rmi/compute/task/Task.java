@@ -33,6 +33,10 @@ package klein.rmi.compute.task;
 
 import java.io.Serializable;
 
+/**
+ * Command interface for calculation tasks.
+ * @param <T> return type
+ */
 public interface Task<T> extends Serializable {
     T execute();
 }

@@ -39,8 +39,14 @@ import klein.rmi.compute.Compute;
 import klein.rmi.compute.SolutionCallback;
 import klein.rmi.compute.task.Task;
 
+/**
+ * ComputeEngine is the reference implementation of @{link Compute} and executes tasks.
+ */
 public class ComputeEngine implements Compute {
 
+    /**
+     * Create a new ComputeEngine.
+     */
     public ComputeEngine() {
         super();
     }
@@ -49,6 +55,9 @@ public class ComputeEngine implements Compute {
         new Thread(new TaskExecutor<>(t, callback)).start();
     }
 
+    /**
+     * Run the engine and export it as and RMI remote object.
+     */
     public void runEngine() {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -66,20 +75,37 @@ public class ComputeEngine implements Compute {
         }
     }
 
+    /**
+     * Main server class.
+     * Creates and runs a ComputeEngine
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         ComputeEngine engine = new ComputeEngine();
         engine.runEngine();
     }
 
+    /**
+     * TaskExecutor is responsible for the actual task execution.
+     * @param <T> task return type
+     */
     private static class TaskExecutor<T> implements Runnable {
         private Task<T> task;
         private SolutionCallback<T> callback;
 
+        /**
+         * Create a new TaskExecutor instance with the given task and callback.
+         * @param task task which should be executed
+         * @param callback callback which should receive the calculation result
+         */
         private TaskExecutor(Task<T> task, SolutionCallback<T> callback) {
             this.task = task;
             this.callback = callback;
         }
 
+        /**
+         * Execute the calculation and return pass the solution to the client via the callback.
+         */
         @Override
         public void run() {
             T solution = task.execute();

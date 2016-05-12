@@ -10,9 +10,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- * Created by markus on 10/05/16.
+ * Test class for the task execution.
  */
 public class ComputeEngineTest {
+    /**
+     * Setup an {@link ComputeEngine} and a {@link ComputeClient} and execute a dummy task.
+     * Verify that the callback is called correctly.
+     * @throws Exception
+     */
     @Test
     public void testExecuteTask() throws Exception {
         TestSolutionCallback mockedCallback = mock(TestSolutionCallback.class);
@@ -30,10 +35,16 @@ public class ComputeEngineTest {
         verify(mockedCallback).getSolution(2);
     }
 
+    /**
+     * Dummy callback class as mockito is not capable of mocking interfaces.
+     */
     private static class TestSolutionCallback implements SolutionCallback<Integer> {
         public void getSolution(Integer solution) throws RemoteException { }
     }
 
+    /**
+     * Dummy task used for testing.
+     */
     private static class TestTask implements Task<Integer> {
         public Integer execute() {
             // sleep to simulate calculation

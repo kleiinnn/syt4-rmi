@@ -36,6 +36,16 @@ import klein.rmi.compute.task.Task;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * An instance of Compute serves as invoker for executing remote calculation tasks.
+ */
 public interface Compute extends Remote {
+    /**
+     * Execute the given task and return the solution to the callback.
+     * @param t task to execute
+     * @param callback callback which should receive the calculation solution
+     * @param <T> type of solution
+     * @throws RemoteException
+     */
     <T> void executeTask(Task<T> t, SolutionCallback<T> callback) throws RemoteException;
 }

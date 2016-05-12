@@ -6,7 +6,6 @@ import klein.rmi.compute.task.EulerCalculateTask;
 import klein.rmi.compute.task.PiCalculateTask;
 import klein.rmi.compute.task.Task;
 
-import java.math.BigDecimal;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -14,13 +13,21 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- * Created by markus on 10/05/16.
+ * ComputeClient is the main client class.
+ * An instance of ComputeClient wraps the RMI functionality and
+ * provides and convenient interface for executing calculation tasks.
  */
 public class ComputeClient {
     public static final String LOOKUP_NAME = "Compute";
 
     private Compute compute;
 
+    /**
+     * Creates a new ComputeClient instance and connects to the RMI server at the given hosts.
+     * @param host RMI server host
+     * @throws RemoteException
+     * @throws NotBoundException
+     */
     public ComputeClient(String host) throws RemoteException, NotBoundException {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -30,21 +37,36 @@ public class ComputeClient {
         compute = (Compute) registry.lookup(LOOKUP_NAME);
     }
 
+    /**
+     * Execute the given task on the server.
+     * @param task task which should be executed
+     * @param callback callback which is called when the calculation is finished
+     * @throws RemoteException
+     */
     public void executeTask(Task task, SolutionCallback callback) throws RemoteException {
         compute.executeTask(task, callback);
     }
 
+    /**
+     * Prints usage information
+     */
     private static void printUsage() {
         System.out.println("Parameters: [pi, euler] <precision> <server-host>");
     }
 
+    /**
+     * Main method for client
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
+        // check parameter length
         if(args.length != 3) {
-            System.err.println("Wrong paramters.");
+            System.err.println("Wrong parameters.");
             printUsage();
             return;
         }
 
+        // create callback
         SolutionCallback callback = new SolutionCallback() {
             @Override
             public void getSolution(Object solution) throws RemoteException {
@@ -67,6 +89,7 @@ public class ComputeClient {
                 return;
             }
 
+            // execute task
             client.executeTask(task, (SolutionCallback) UnicastRemoteObject.exportObject(callback, 0));
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
