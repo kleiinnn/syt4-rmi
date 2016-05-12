@@ -13,7 +13,6 @@ import java.rmi.server.UnicastRemoteObject;
  * Created by markus on 10/05/16.
  */
 public class ComputeEngineTest {
-
     @Test
     public void testExecuteTask() throws Exception {
         TestSolutionCallback mockedCallback = mock(TestSolutionCallback.class);
@@ -25,6 +24,9 @@ public class ComputeEngineTest {
         TestTask task = new TestTask();
         client.executeTask(task, (SolutionCallback<Integer>) UnicastRemoteObject.exportObject(mockedCallback, 0));
 
+        // wait for the callback before checking the callback call
+        Thread.sleep(700);
+
         verify(mockedCallback).getSolution(2);
     }
 
@@ -34,6 +36,12 @@ public class ComputeEngineTest {
 
     private static class TestTask implements Task<Integer> {
         public Integer execute() {
+            // sleep to simulate calculation
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return 2;
         }
     }
