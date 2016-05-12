@@ -30,8 +30,8 @@ public class ComputeClient {
         compute = (Compute) registry.lookup(LOOKUP_NAME);
     }
 
-    public void executeTask(Task task) throws RemoteException {
-        compute.executeTask(task);
+    public void executeTask(Task task, SolutionCallback callback) throws RemoteException {
+        compute.executeTask(task, callback);
     }
 
     private static void printUsage() {
@@ -57,16 +57,16 @@ public class ComputeClient {
             Task task = null;
 
             if(args[0].equals("pi")) {
-                task = new PiCalculateTask(Integer.parseInt(args[1]), (SolutionCallback) UnicastRemoteObject.exportObject(callback, 0));
+                task = new PiCalculateTask(Integer.parseInt(args[1]));
             } else if(args[0].equals("euler")) {
-                task = new EulerCalculateTask(Integer.parseInt(args[1]), (SolutionCallback) UnicastRemoteObject.exportObject(callback, 0));
+                task = new EulerCalculateTask(Integer.parseInt(args[1]));
             } else {
                 System.err.println("Wrong paramters.");
                 printUsage();
                 return;
             }
 
-            client.executeTask(task);
+            client.executeTask(task, (SolutionCallback) UnicastRemoteObject.exportObject(callback, 0));
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }

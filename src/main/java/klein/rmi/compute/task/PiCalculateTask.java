@@ -29,7 +29,6 @@ package klein.rmi.compute.task;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import klein.rmi.compute.SolutionCallback;
 import java.math.BigDecimal;
 
 public class PiCalculateTask implements Task<BigDecimal> {
@@ -47,20 +46,12 @@ public class PiCalculateTask implements Task<BigDecimal> {
     /** digits of precision after the decimal point */
     private final int digits;
 
-    private SolutionCallback<BigDecimal> callback;
-
     /**
      * Construct a task to calculate pi to the specified
      * precision.
      */
-    public PiCalculateTask(int digits, SolutionCallback<BigDecimal> callback) {
+    public PiCalculateTask(int digits) {
         this.digits = digits;
-        this.callback = callback;
-    }
-
-    @Override
-    public SolutionCallback<BigDecimal> getCallback() {
-        return callback;
     }
 
     /**

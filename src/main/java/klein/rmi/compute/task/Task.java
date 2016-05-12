@@ -31,12 +31,8 @@
 
 package klein.rmi.compute.task;
 
-import klein.rmi.compute.SolutionCallback;
-
 import java.io.Serializable;
 
 public interface Task<T> extends Serializable {
-    SolutionCallback<T> getCallback();
-
     T execute();
 }

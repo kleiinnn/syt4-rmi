@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- General configuration options -->
     <groupId>klein.rmi</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>syt-rmi</artifactId>
@@ -8,6 +9,7 @@
 
     <name>SYT 4 RMI</name>
 
+    <!-- Dependencies -->
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -23,6 +25,7 @@
         </dependency>
     </dependencies>
 
+    <!-- Set language level. Otherwise expressions like lambdas are not allowed -->
     <build>
         <plugins>
             <plugin>

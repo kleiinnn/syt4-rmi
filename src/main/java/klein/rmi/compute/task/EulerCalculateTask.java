@@ -12,16 +12,9 @@ import java.math.RoundingMode;
  */
 public class EulerCalculateTask implements Task<BigDecimal> {
     private int precision;
-    private SolutionCallback<BigDecimal> callback;
 
-    public EulerCalculateTask(int digits, SolutionCallback<BigDecimal> callback) {
+    public EulerCalculateTask(int digits) {
         this.precision = digits;
-        this.callback = callback;
-    }
-
-    @Override
-    public SolutionCallback<BigDecimal> getCallback() {
-        return callback;
     }
 
     @Override
@@ -33,7 +26,7 @@ public class EulerCalculateTask implements Task<BigDecimal> {
         BigDecimal e = BigDecimal.ONE;
         BigDecimal fact = BigDecimal.ONE;
 
-        for(int i=1;i<precision;i++) {
+        for(int i=1;i<=precision;i++) {
             fact = fact.multiply(new BigDecimal(i));
 
             e = e.add(BigDecimal.ONE.divide(fact, new MathContext(10000, RoundingMode.HALF_UP)));

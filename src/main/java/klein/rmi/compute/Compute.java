@@ -37,5 +37,5 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface Compute extends Remote {
-    <T> void executeTask(Task<T> t) throws RemoteException;
+    <T> void executeTask(Task<T> t, SolutionCallback<T> callback) throws RemoteException;
 }

@@ -22,10 +22,10 @@ public class ComputeEngineTest {
         engine.runEngine();
 
         ComputeClient client = new ComputeClient("localhost");
-        TestTask task = new TestTask((SolutionCallback<Integer>) UnicastRemoteObject.exportObject(mockedCallback, 0));
-        client.executeTask(task);
+        TestTask task = new TestTask();
+        client.executeTask(task, (SolutionCallback<Integer>) UnicastRemoteObject.exportObject(mockedCallback, 0));
 
-        verify(mockedCallback).getSolution(1);
+        verify(mockedCallback).getSolution(2);
     }
 
     private static class TestSolutionCallback implements SolutionCallback<Integer> {
@@ -33,18 +33,8 @@ public class ComputeEngineTest {
     }
 
     private static class TestTask implements Task<Integer> {
-        private SolutionCallback<Integer> callback;
-
-        public TestTask(SolutionCallback<Integer> callback) {
-            this.callback = callback;
-        }
-
-        public SolutionCallback<Integer> getCallback() {
-            return callback;
-        }
-
         public Integer execute() {
-            return 1;
+            return 2;
         }
     }
 }

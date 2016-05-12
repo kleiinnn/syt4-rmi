@@ -36,6 +36,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import klein.rmi.compute.Compute;
+import klein.rmi.compute.SolutionCallback;
 import klein.rmi.compute.task.Task;
 
 public class ComputeEngine implements Compute {
@@ -44,8 +45,8 @@ public class ComputeEngine implements Compute {
         super();
     }
 
-    public <T> void executeTask(Task<T> t) {
-        new Thread(new TaskExecutor<>(t)).start();
+    public <T> void executeTask(Task<T> t, SolutionCallback<T> callback) {
+        new Thread(new TaskExecutor<>(t, callback)).start();
     }
 
     public void runEngine() {
@@ -72,16 +73,18 @@ public class ComputeEngine implements Compute {
 
     private static class TaskExecutor<T> implements Runnable {
         private Task<T> task;
+        private SolutionCallback<T> callback;
 
-        private TaskExecutor(Task<T> task) {
+        private TaskExecutor(Task<T> task, SolutionCallback<T> callback) {
             this.task = task;
+            this.callback = callback;
         }
 
         @Override
         public void run() {
             T solution = task.execute();
             try {
-                task.getCallback().getSolution(solution);
+                callback.getSolution(solution);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
