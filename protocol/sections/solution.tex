@@ -24,9 +24,9 @@ grant codeBase "file:/Users/<USERNAME>/-" {
 
 \subsubsection{Implementierung}
 Es wird das Java RMI Tutorial\cite{rmi-tutorial} mit der Implementierung von Micheal Borko\cite{rmi-tutorial-impl} herangezogen.
-Nach der entsprechenden Konfiguration in der Java Policy bereiten sich bei der Ausf\"uhrung mittels den beiden bereits bestehenden Ant-Tasks \texttt{engine} und \texttt{compute} keine weiteren Schwierigkeiten.
+Nach der entsprechenden Konfiguration in der Java Policy bereiten die Ausf\"uhrung mittels der beiden bereits bestehenden Ant-Tasks \texttt{engine} und \texttt{compute} keine weiteren Schwierigkeiten.
 
-Bei der Durchsicht des Tutorialcodes wird ersichtlich, dass es sich dabei bereits um die Implementierung eines Command-Patterns handelt.
+Bei der Durchsicht des Tutorialcodes wird ersichtlich, dass es sich dabei bereits um eine Implementierung eines Command-Patterns handelt.
 
 \begin{figure}[!h]
 	\begin{center}
@@ -36,13 +36,13 @@ Bei der Durchsicht des Tutorialcodes wird ersichtlich, dass es sich dabei bereit
 	\end{center}
 \end{figure}
 
-\texttt{Task} is dabei das Command-Interface und dient dem konkreten Command \texttt{Pi}.
+\texttt{Task} is das Command-Interface und dient dem konkreten Command \texttt{Pi}.
 Das vom Server angebotene Remote Object der Klasse \texttt{ComputeEngine} nimmt Tasks (also Kommandos) entgegen, f\"uhrt diesen aus und sendet das Ergebnis zur\"uck an den Client.
 Es fungiert somit im Sinne des Command Patterns als Receiver.
 
 \subsection{Berechnung der Euler'schen Zahl}
-Um es dem Client auch zu erm\"oglichen die Euler'sche Zahl e zu berechnen wird ein weiter \texttt{Task} mit einem entsprechenden Algorithmus implementiert.
-Mathematisch wird dieser durch folgende Summenfunktion ausgedr\"uckt:
+F\"ur die Berechnung der Euler'schen Zahl e zu berechnen wird ein weiter \texttt{Task} mit einem entsprechenden Algorithmus implementiert.
+Mathematisch wird die Berechnung durch folgende Summenfunktion ausgedr\"uckt:
 
 \begin{equation*}
 \displaystyle\sum_{k=0}^{\infty} \dfrac{1}{k!}
@@ -71,15 +71,15 @@ Folgendes UML Klassendiagramm zeigt die Zielstruktur der Applikation:
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=0.8\linewidth]{images/class_diagram.pdf}
+		\includegraphics[width=0.9\linewidth]{images/class_diagram.pdf}
 		\caption{Applikationsstruktur als UML Klassendiagramm}
 		\label{broker}
 	\end{center}
 \end{figure}
 
 Hier die wichtigsten \"Aenderungen, welche sich durch die Implementierung des Callback ergeben haben.
-Es wurde eine \texttt{SolutionCallback} Klasse eingef\"uhrt, welche als Interface zur Implementierung der Callbacks dient.
-Genauso wie \texttt{Task} hat sie einen Typparameter, welche den R\"uckgabewert anzeigt.
+Es wurde eine \texttt{SolutionCallback} Klasse eingef\"uhrt, die als Interface zur Implementierung der Callbacks dient.
+Genauso wie \texttt{Task} erh\"alt sie den R\"uckgabewert als Typparameter.
 
 Der zentrale Kompoenente der Anwendung ist die Klasse \texttt{ComputeEngine} als konkrete Implementierung von \texttt{Compute}.
 Ihr wird nun in der \texttt{executeTask} Methode zus\"atzlich zum auszuf\"uhrenden \texttt{Task} auch ein \texttt{SolutionCallback} Objekt \"ubergeben, welches nach der Berechnung mit dem Ergebnis aufrufen wird:
@@ -138,11 +138,11 @@ public class ComputeEngine implements Compute {
 }
 \end{lstlisting}
 
-Da das Ziel ist, eine asynchrone (nicht blockierende) Berechnung zu realisieren muss die eigentliche Berechnung, also der Aufruf von \texttt{tast.execute()} jeweils einen eigenen Thread ausgelagert werden.
-Hierf\"ur dient die \texttt{TaskExecutor}. Sobald der Client die \texttt{executeTask} Methode von \texttt{ComputeEngine} auruft, erstellt diese einen neuen \texttt{TaskExecutor} starten einen neuen Thread.
+Da das Ziel ist, eine asynchrone (nicht blockierende) Berechnung zu realisieren muss die eigentliche Berechnung, also der Aufruf von \texttt{tast.execute()} jeweils in einen eigenen Thread ausgelagert werden.
+Hierf\"ur dient die Klasse \texttt{TaskExecutor}. Sobald der Client die \texttt{executeTask} Methode von \texttt{ComputeEngine} aufruft, erstellt diese eine neue Instanz von \texttt{TaskExecutor} und startet sie in einem Thread.
 An dieser Stelle ist der Methodenaufruf beendet und der Client setzt seine Programmausf\"uhrung fort.
 Innerhalb des Threads wird nun die eigentliche Berechnung durchgef\"uhrt und das Ergebnis \"uber den (asynchronen) Callbackaufruf an den Client weitergeleitet.
-Das folgende Sequenzdiagram bietet eine \"ubersichtliche Darstellung des Ablaufes.
+Das folgende Sequenzdiagram veranschaulicht den Ablaufes.
 
 \begin{figure}[H]
 	\begin{center}
@@ -176,7 +176,7 @@ Task task = new PiCalculateTask(10);
 client.executeTask(task, (SolutionCallback) UnicastRemoteObject.exportObject(callback, 0));
 \end{lstlisting}
 
-Wichtig ist dabei die letzte Zeile, welche das Callback Objekt wieder entfernt und damit der auf entfernte Methodenaufrufe wartet beendet werden kann.
+Erw\"ahnenswert ist auch die letzte Zeile, welche das Callback Objekt wieder entfernt und damit den auf entfernte Methodenaufrufe wartende Thread beendet werden kann.
 
 
 \subsection{Testung}
@@ -236,7 +236,7 @@ Einige nicht relevanten aber dennoch zwingende Attribute und Elemente wurden weg
 \end{lstlisting}
 
 \subsubsection{Testcases}
-Der wichtigste Testcase startet eine \texttt{ComputeEngine}, \"offnet eine Verbindung und f\"uehrt eine Dummyberechnung aus.
+Der wichtigste Testcase startet eine \texttt{ComputeEngine}, \"offnet eine Verbindung und f\"uhrt eine Dummyberechnung aus.
 Als Callback Objekt kommt ein Spy zum Einsatz, welcher den korrekten Aufruf der Callbackfunktion mit dem erwarteten Ergebnis verifiziert.
 
 \begin{lstlisting}[style=Java, caption=Testfall zur Durchf\"uhrung von asynchronen Berechnungen]
@@ -290,10 +290,10 @@ Bevor die Applikation gestartet werden kann, wird mit Maven ein jar generiert:
 \texttt{mvn package}
 
 W\"ahrenddessen werden auch automatisch die Testcases ausgef\"uhrt.
-Danach kann wird das Programm durch folgende Befehlegestartet:
+Danach wird das Programm durch folgende Befehle gestartet:
 \begin{itemize}
     \item Server: \texttt{java -cp target/syt-rmi-1.0.jar klein.rmi.engine.ComputeEngine}
-    \item Client: \texttt{java -cp target/syt-rmi-1.0.jar klein.rmi.engine.ComputeEngine} [pi, euler] <precision> <server-host>
+    \item Client: \texttt{java -cp target/syt-rmi-1.0.jar klein.rmi.engine.ComputeEngine [pi,\\euler]<precision> <server-host>}
 \end{itemize}
 
 Der Code ist auf GitHub unter folgender Adresse abrufbar: \url{https://github.com/kleiinnn/syt4-rmi}\cite{repo}.
